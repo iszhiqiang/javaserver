@@ -25,7 +25,7 @@
 <section class="hidden-xs">
     <ul class="cb-slideshow">
         <script th:inline="javascript">
-            var backgroundList = /*[[${GLOBAL.BACKGROUND_LIST}]]*/ "";
+            var backgroundList =/*[[${GLOBAL.BACKGROUND_LIST}]]*/ "";
             backgroundList = JSON.parse(backgroundList);
             var duration = backgroundList.length * 6;
             for (var i in backgroundList) {

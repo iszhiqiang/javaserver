@@ -1,7 +1,7 @@
 package com.iszhouhua.blog.controller.front;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
+
 import com.iszhouhua.blog.model.enums.LinkTypeEnum;
 import com.iszhouhua.blog.model.pojo.Link;
 import com.iszhouhua.blog.service.LinkService;
@@ -27,7 +27,6 @@ public class LinkController extends BaseController {
     @GetMapping("/")
     public String link(Model model) {
         QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
         queryWrapper.eq("type", LinkTypeEnum.FRIEND_LINK.getValue());
         List<Link> links = linkService.list(queryWrapper);
         model.addAttribute("list", links);

@@ -41,13 +41,13 @@ public interface LogMapper extends BaseMapper<Log> {
      * 查询所有浏览器
      * @return
      */
-    @Select("select DISTINCT browser from blog_log ")
+    @Select("select browser from blog_log")
     List<String> selectAllBrowser();
 
     /**
      * 查询所有操作系统
      * @return
      */
-    @Select("select DISTINCT operating_system from blog_log")
+    @Select("select operating_system from blog_log")
     List<String> selectAllOperatingSystem();
 }

@@ -35,9 +35,4 @@ public class Spider implements Serializable {
      */
     @NotBlank(message = "内容规则不能为空")
     private String contentRule;
-
-    /**
-     * 是否删除(1: 删除 0: 未删除)
-     */
-    private Integer isDelete;
 }

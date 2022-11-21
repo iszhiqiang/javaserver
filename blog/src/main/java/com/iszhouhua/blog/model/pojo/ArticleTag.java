@@ -29,11 +29,6 @@ public class ArticleTag implements Serializable {
      */
     private Long tagId;
 
-    /**
-     * 是否删除(1: 删除 0: 未删除)
-     */
-    private Integer isDelete;
-
     public ArticleTag(Long articleId, Long tagId) {
         this.articleId = articleId;
         this.tagId = tagId;

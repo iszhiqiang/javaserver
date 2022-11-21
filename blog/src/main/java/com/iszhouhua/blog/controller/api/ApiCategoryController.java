@@ -1,11 +1,9 @@
 package com.iszhouhua.blog.controller.api;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iszhouhua.blog.common.util.Result;
 import com.iszhouhua.blog.common.util.ValidatorUtils;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
 import com.iszhouhua.blog.model.pojo.Category;
 import com.iszhouhua.blog.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +25,17 @@ public class ApiCategoryController {
 
     @GetMapping("list")
     public Result list(Page<Category> page) {
-        QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
-        return Result.success(categoryService.page(page, queryWrapper));
+        return Result.success(categoryService.page(page));
     }
 
     @GetMapping("all")
     public Result all() {
-        QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
-        return Result.success(categoryService.list(queryWrapper));
+        return Result.success(categoryService.list());
     }
 
     @PostMapping
     public Result save(@RequestBody Category category) {
         ValidatorUtils.validate(category);
-        category.setIsDelete(DeleteEnum.NOTDELETE.getValue());
         categoryService.save(category);
         return Result.success(category);
     }
@@ -64,8 +57,6 @@ public class ApiCategoryController {
 
     @DeleteMapping
     public Result remove(Long id) {
-        Category category = categoryService.getById(id);
-        category.setIsDelete(DeleteEnum.DELETE.getValue());
-        return categoryService.updateById(category) ? Result.success() : Result.fail("删除失败");
+        return categoryService.removeById(id) ? Result.success() : Result.fail("删除失败");
     }
 }

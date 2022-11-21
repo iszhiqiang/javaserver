@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 /**
  * 分类表
- *
  * @author ZhouHua
  * @since 2018-12-14
  */
@@ -29,9 +28,4 @@ public class Category implements Serializable {
      */
     @NotBlank(message = "分类链接不能为空")
     private String url;
-
-    /**
-     * 是否删除(1: 删除 0: 未删除)
-     */
-    private Integer isDelete;
 }

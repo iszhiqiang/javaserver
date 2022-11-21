@@ -66,9 +66,10 @@ public interface CommentService extends IService<Comment> {
      */
     void clearCache();
 
-
-    List<Comment> findLatestComments(Long articleId);
-
-
+    /**
+     *
+     * @param parentId
+     * @return
+     */
     List<Comment> getCommentByParentId(Long parentId);
 }

@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 /**
  * 链接表
- *
  * @author ZhouHua
  * @since 2018-12-01
  */
@@ -31,10 +30,5 @@ public class Link implements Serializable {
      * 链接类型 1：友情链接 2：个人链接
      */
     private Integer type;
-
-    /**
-     * 是否删除(1:删除 0: 未删除)
-     */
-    private Integer isDelete;
 
 }

@@ -3,7 +3,6 @@ package com.iszhouhua.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iszhouhua.blog.mapper.LinkMapper;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
 import com.iszhouhua.blog.model.pojo.Link;
 import com.iszhouhua.blog.service.LinkService;
 import org.springframework.cache.annotation.CacheConfig;
@@ -28,7 +27,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     @Override
     @Cacheable(key = "targetClass + methodName + #type")
     public List<Link> findLinkByType(Integer type) {
-        return list(new QueryWrapper<Link>().eq("type", type).eq("is_delete", DeleteEnum.NOTDELETE.getValue()));
+        return list(new QueryWrapper<Link>().eq("type",type));
     }
 
     @Override

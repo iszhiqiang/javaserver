@@ -69,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                     //用户名重复，添加来源平台作为后缀
                     user.setUsername(thirdUser.getUsername() + "_" + thirdUser.getSource());
                 }
-                user.setIsAdmin(3);
+                user.setIsAdmin(false);
                 user.setIsDisable(false);
                 user.setLoginFailNum(0);
                 user.setCreateTime(new Date());

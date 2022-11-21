@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iszhouhua.blog.mapper.CommentMapper;
 import com.iszhouhua.blog.model.enums.CommentStatusEnum;
 import com.iszhouhua.blog.model.enums.CommentTargetTypeEnum;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
 import com.iszhouhua.blog.model.pojo.Article;
 import com.iszhouhua.blog.model.pojo.Comment;
 import com.iszhouhua.blog.model.pojo.User;
@@ -42,9 +41,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Autowired
     private ArticleService articleService;
 
-    @Autowired
-    private CommentMapper commentMapper;
-
     @Override
     @Cacheable(key = "targetClass + methodName + #p0.current +#p0.size + #p1")
     public IPage<Comment> findPageByArticleId(Page<Comment> page, Long articleId) {
@@ -52,7 +48,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .eq("target_type", CommentTargetTypeEnum.ARTICLE.getValue())
                 .eq("article_id", articleId)
                 .eq("status", CommentStatusEnum.PUBLISHED.getValue())
-                .eq("is_delete", DeleteEnum.NOTDELETE.getValue())
                 .orderByDesc("id"));
         //获得评论下的子评论
         List<Comment> list = commentPage.getRecords();
@@ -60,8 +55,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         List<Comment> subComments = baseMapper.selectList(new QueryWrapper<Comment>()
                 .eq("target_type", CommentTargetTypeEnum.COMMENT.getValue())
                 .eq("status", CommentStatusEnum.PUBLISHED.getValue())
-                .in("parent_id", commentIds)
-                .eq("is_delete", DeleteEnum.NOTDELETE.getValue()));
+                .in("parent_id", commentIds));
         //子评论分组
         Map<Long, List<Comment>> subCommentsMap = new HashMap<>();
         for (Comment subComment : subComments) {
@@ -86,7 +80,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public Integer countByArticleId(Long articleId) {
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("article_id", articleId);
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
         return baseMapper.selectCount(queryWrapper);
     }
 
@@ -117,7 +110,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         } else {
             wrapper.eq("status", CommentStatusEnum.PUBLISHED.getValue());
         }
-        wrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
         wrapper.orderByDesc("id");
         wrapper.last(" LIMIT " + count);
         List<Comment> list = baseMapper.selectList(wrapper);
@@ -147,17 +139,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public List<Comment> findLatestComments(Long articleId) {
-        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("article_id", articleId);
-        List<Comment> commentList = baseMapper.selectList(queryWrapper);
-        return commentList;
-    }
-
-
-    @Override
     public List<Comment> getCommentByParentId(Long parentId) {
-        return commentMapper.getCommentByParentId(parentId);
+        return baseMapper.getCommentByParentId(parentId);
     }
-
 }

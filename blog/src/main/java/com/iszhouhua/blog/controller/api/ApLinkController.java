@@ -1,11 +1,9 @@
 package com.iszhouhua.blog.controller.api;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iszhouhua.blog.common.util.Result;
 import com.iszhouhua.blog.common.util.ValidatorUtils;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
 import com.iszhouhua.blog.model.pojo.Link;
 import com.iszhouhua.blog.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +25,12 @@ public class ApLinkController {
 
     @GetMapping("list")
     public Result list(Page<Link> page) {
-        QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
-        return Result.success(linkService.page(page, queryWrapper));
+        return Result.success(linkService.page(page));
     }
 
     @PostMapping
     public Result save(@RequestBody Link link) {
         ValidatorUtils.validate(link);
-        link.setIsDelete(DeleteEnum.NOTDELETE.getValue());
         boolean res = linkService.save(link);
         linkService.clearCache();
         return res ? Result.success(link) : Result.fail("保存失败");
@@ -59,9 +54,7 @@ public class ApLinkController {
 
     @DeleteMapping
     public Result remove(Long id) {
-        Link link = linkService.getById(id);
-        link.setIsDelete(DeleteEnum.DELETE.getValue());
-        boolean res = linkService.updateById(link);
+        boolean res = linkService.removeById(id);
         linkService.clearCache();
         return res ? Result.success() : Result.fail("删除失败");
     }

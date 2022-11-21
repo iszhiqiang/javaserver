@@ -98,9 +98,4 @@ public class Comment implements Serializable {
      */
     @TableField(exist = false)
     private User replyUser;
-
-    /**
-     * 是否删除(1: 删除 0: 未删除)
-     */
-    private Integer isDelete;
 }

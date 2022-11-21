@@ -3,16 +3,28 @@
         <a id="blogurl" href="" target="_blank">[[${GLOBAL.BLOG_TITLE}]]</a>. Theme by AONOSORA
     </div>
     <div>
+
         <a th:unless="${#strings.isEmpty(GLOBAL.FILING_ICP)}" href="https://beian.miit.gov.cn/" target="_blank"
            rel="nofollow" th:text="${GLOBAL.FILING_ICP}">粤ICP备18143925号-1</a>
         <span th:unless="${#strings.isEmpty(GLOBAL.FILING_SECURITY)}">
-        <img src="/images/icon-filing.png" style="width: 15px;height: 15px;margin-top: -4px;margin-left: 4px;">
-            [[${GLOBAL.FILING_SECURITY}]]
 
+        <img src="/images/icon-filing.png" style="width: 15px;height: 15px;margin-top: -4px;margin-left: 4px;">
+            <a id="networkUrl" th:unless="${#strings.isEmpty(GLOBAL.FILING_SECURITY)}" href="" target="_blank"
+               rel="nofollow" th:text="${GLOBAL.FILING_SECURITY}"></a>
         </span>
     </div>
 </footer>
 <script>
-    var href = $('blogurl').attr('href');
-    $('#blogurl').attr('href', [[${GLOBAL.BLOG_URL}]])
+    // var href = $('blogurl').attr('href');
+    // $('#blogurl').attr('href',);
+    // var hf= $('networkUrl').attr('href',"");
+    // $('#networkUrl').attr('hf',"");
+    var hr = document.getElementById('blogurl').href = '[[${GLOBAL.BLOG_URL}]]';
+    alert(hr)
+    var str = '[[${GLOBAL.FILING_SECURITY}]]';
+    var strs = str.substring(7, 15);
+    document.getElementById('networkUrl').href =
+        "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=" + strs;
+
+
 </script>

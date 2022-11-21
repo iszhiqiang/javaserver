@@ -1,6 +1,7 @@
 package com.iszhouhua.blog.controller.api;
 
 import cn.hutool.core.lang.Validator;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.iszhouhua.blog.common.constant.CodeEnum;
 import com.iszhouhua.blog.common.constant.Const;
 import com.iszhouhua.blog.common.exception.BlogException;
@@ -11,9 +12,9 @@ import com.iszhouhua.blog.common.util.ValidatorUtils;
 import com.iszhouhua.blog.model.param.LoginParam;
 import com.iszhouhua.blog.model.param.RegisterParam;
 import com.iszhouhua.blog.model.param.ResetPasswordParam;
+import com.iszhouhua.blog.model.pojo.Log;
 import com.iszhouhua.blog.model.pojo.User;
-import com.iszhouhua.blog.service.AuthService;
-import com.iszhouhua.blog.service.UserService;
+import com.iszhouhua.blog.service.*;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.codec.DecoderException;
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 控制登录和上传等
@@ -49,11 +52,17 @@ public class ApiController {
     private UserService userService;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private LogService logService;
+    @Autowired
+    private CommentService commentService;
+    @Autowired
+    private ArticleService articleService;
 
     /**
      * 登录
      *
-     * @param param   用户名和密码
+     * @param param    用户名和密码
      * @param session
      * @return
      */
@@ -72,7 +81,7 @@ public class ApiController {
         if (user.getIsDisable()) {
             return Result.fail("账号已被禁用");
         }
-        if (StringUtils.isBlank(user.getPassword())) {
+        if(StringUtils.isBlank(user.getPassword())){
             return Result.fail("当前账号暂未设置密码");
         }
         //验证密码是否正确
@@ -135,7 +144,7 @@ public class ApiController {
         String password = PBKDF2Utils.getPBKDF2(user.getPassword(), salt);
         user.setSalt(salt);
         user.setPassword(password);
-        user.setIsAdmin(3);
+        user.setIsAdmin(false);
         user.setIsDisable(false);
         user.setLoginFailNum(0);
         user.setCreateTime(new Date());
@@ -154,7 +163,7 @@ public class ApiController {
      * @return
      */
     @GetMapping("sendCode")
-    public Result sendCode(@NotBlank(message = "邮箱不能为空") @Email(message = "邮箱格式非法") String email, @NotBlank(message = "操作类型不能为空") String operation) throws MessagingException {
+    public Result sendCode(@NotBlank(message = "邮箱不能为空") @Email(message = "邮箱格式非法") String email,@NotBlank(message = "操作类型不能为空") String operation) throws MessagingException {
         authService.sendCode(email, operation);
         return Result.success();
     }
@@ -236,5 +245,22 @@ public class ApiController {
             result.setCode(CodeEnum.FAIL.getValue());
         }
         return result;
+    }
+
+    /**
+     * 获取统计数据
+     *
+     * @return
+     */
+    @GetMapping("statistics")
+    public Result statistics() {
+        Map<String, Integer> data = new HashMap<>();
+        int totalVisits = logService.count();
+        data.put("totalVisits", totalVisits);
+        int latestVisits = logService.count(new QueryWrapper<Log>().apply("create_time > DATE_SUB(CURDATE(), INTERVAL 1 WEEK)"));
+        data.put("latestVisits", latestVisits);
+        data.put("totalComment",commentService.count());
+        data.put("totalArticle",articleService.count());
+        return Result.success(data);
     }
 }

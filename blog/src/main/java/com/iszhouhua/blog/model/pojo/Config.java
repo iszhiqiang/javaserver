@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 /**
  * 博客配置
- *
  * @author ZhouHua
  * @since 2018-12-01
  */
@@ -38,9 +37,4 @@ public class Config implements Serializable {
      * 描述
      */
     private String description;
-
-    /**
-     * 是否删除(1: 删除 0: 未删除)
-     */
-    private Integer isDelete;
 }

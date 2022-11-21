@@ -60,9 +60,4 @@ public class ThirdUser implements Serializable {
      * 创建时间
      */
     private Date createTime;
-
-    /**
-     * 是否删除(1: 删除 0: 未删除)
-     */
-    private Integer isDelete;
 }

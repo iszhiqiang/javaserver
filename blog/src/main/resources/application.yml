@@ -1,11 +1,11 @@
 server:
-  port: 8088
+  port: 8080
 spring:
   mvc:
     favicon:
       enabled: false
   profiles:
-    active: prod
+    active: dev
   http:
     converters:
       preferred-json-mapper: gson
@@ -77,12 +77,12 @@ mybatis-plus:
     banner: false
 oauth:
   gitee:
-    client-id: 9c0303037153a17c2352c10f573437b6b3039a9dd8329b965d8bc4cfefca120c
-    client-secret: 1c2004995ee9926e50c3c11fed8048bea76c34fbb3d5db117addf6a65d165103
-    redirect-uri: https://www.xuanyuanwenxue.top/oauth/callback/gitee
+    client-id: bc0b8e96eeaadc8a9d4f59bb305314ce55eb3a27a48013ed30a07d054c688e32
+    client-secret: 5791ec70b56c62d3e9e03b92f94c6fa23e2896912677371a7ff1ec0236570af6
+    redirect-uri: https://iszhiqiang.cn/oauth/callback/gitee
     scopes: user_info,emails
   github:
-    client-id: f9b9752ff093edd69f7e
-    client-secret: 725cf30a4544412ec62489ada7213a9cd05957ad
-    redirect-uri: https://www.xuanyuanwenxue.top/oauth/callback/github
+    client-id: 10e9e5b8619c9d2b32cc
+    client-secret: 30e3c3438977704ffd8e417f7dff709c5df954c9
+    redirect-uri: https://iszhiqiang.cn//oauth/callback/github
     scopes: user

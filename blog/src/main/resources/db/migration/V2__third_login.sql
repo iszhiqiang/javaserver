@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS `blog_third_user`
     `source` varchar(20) NOT NULL COMMENT '数据来源',
     `raw_user_info` text NOT NULL COMMENT '原始用户信息',
     `create_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `is_delete`        tinyint(4)           DEFAULT NULL COMMENT '是否删除 1：删除 0：未删除',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_uuid_source` (`username`,`source`)
     ) ENGINE = InnoDB

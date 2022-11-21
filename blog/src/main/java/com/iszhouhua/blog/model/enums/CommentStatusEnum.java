@@ -2,7 +2,6 @@ package com.iszhouhua.blog.model.enums;
 
 /**
  * 评论状态枚举类
- *
  * @author ZhouHua
  * @date 2018/12/26
  */
@@ -20,9 +19,9 @@ public enum CommentStatusEnum {
     PUBLISHED(1, "已发布"),
 
     /**
-     * 未通过通过
+     * 已删除
      */
-    RECYCLE(2, "未通过");
+    RECYCLE(2, "已删除");
 
     private int value;
     private String desc;

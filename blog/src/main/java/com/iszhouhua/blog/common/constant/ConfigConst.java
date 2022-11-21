@@ -2,7 +2,6 @@ package com.iszhouhua.blog.common.constant;
 
 /**
  * 系统参数相关Key
- *
  * @author ZhouHua
  * @date 2019/05/07
  */
@@ -23,9 +22,4 @@ public class ConfigConst {
      * 网站域名
      */
     public final static String BLOG_TITLE = "BLOG_TITLE";
-
-    /**
-     * 公告
-     */
-    public final static String BLOG_NOTICE = "BLOG_NOTICE";
 }

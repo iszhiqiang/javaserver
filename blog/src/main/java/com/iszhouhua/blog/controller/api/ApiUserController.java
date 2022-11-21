@@ -88,7 +88,7 @@ public class ApiUserController {
         if (currentUser.getId().equals(user.getId())) {
             if (Objects.nonNull(user.getIsDisable()) && user.getIsDisable()) {
                 return Result.fail(CodeEnum.VALIDATION_ERROR.getValue(), "不可以禁用自己");
-            } else if (Objects.nonNull(user.getIsAdmin()) && 1 != user.getIsAdmin()) {
+            } else if (Objects.nonNull(user.getIsAdmin()) && !user.getIsAdmin()) {
                 return Result.fail(CodeEnum.VALIDATION_ERROR.getValue(), "不可以将自己降为普通用户");
             }
         }

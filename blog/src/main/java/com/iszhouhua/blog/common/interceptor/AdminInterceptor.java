@@ -28,9 +28,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         //如果是管理员则放行
         User user = (User) request.getSession().getAttribute(Const.USER_SESSION_KEY);
         if (Objects.nonNull(user)) {
-            if (user.getIsAdmin() == 1) {
-                return true;
-            } else if (user.getIsAdmin() == 2) {
+            if (user.getIsAdmin()) {
                 return true;
             } else {
                 //非管理员禁止登陆

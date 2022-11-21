@@ -46,9 +46,4 @@ public class Menu implements Serializable {
      */
     @NotNull(message = "菜单排序不能为空")
     private Integer sort;
-
-    /**
-     * 是否删除(1:删除 0: 未删除)
-     */
-    private Integer isDelete;
 }

@@ -1,11 +1,9 @@
 package com.iszhouhua.blog.controller.api;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iszhouhua.blog.common.util.Result;
 import com.iszhouhua.blog.common.util.ValidatorUtils;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
 import com.iszhouhua.blog.model.pojo.Tag;
 import com.iszhouhua.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +25,17 @@ public class ApiTagController {
 
     @GetMapping("list")
     public Result list(Page<Tag> page) {
-        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
-        return Result.success(tagService.page(page, queryWrapper));
+        return Result.success(tagService.page(page));
     }
 
     @GetMapping("all")
     public Result all() {
-        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
-        return Result.success(tagService.list(queryWrapper));
+        return Result.success(tagService.list());
     }
 
     @PostMapping
     public Result save(@RequestBody Tag tag) {
         ValidatorUtils.validate(tag);
-        tag.setIsDelete(DeleteEnum.NOTDELETE.getValue());
         boolean res = tagService.save(tag);
         tagService.clearCache();
         return res ? Result.success(tag) : Result.fail("保存失败");
@@ -66,9 +59,7 @@ public class ApiTagController {
 
     @DeleteMapping
     public Result remove(Long id) {
-        Tag tag = tagService.getById(id);
-        tag.setIsDelete(DeleteEnum.DELETE.getValue());
-        boolean res = tagService.updateById(tag);
+        boolean res = tagService.removeById(id);
         tagService.clearCache();
         return res ? Result.success() : Result.fail("删除失败");
     }

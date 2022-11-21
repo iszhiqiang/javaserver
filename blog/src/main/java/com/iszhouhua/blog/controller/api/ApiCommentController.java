@@ -11,18 +11,17 @@ import com.iszhouhua.blog.common.util.Result;
 import com.iszhouhua.blog.common.util.ValidatorUtils;
 import com.iszhouhua.blog.model.enums.CommentStatusEnum;
 import com.iszhouhua.blog.model.enums.CommentTargetTypeEnum;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
 import com.iszhouhua.blog.model.pojo.Comment;
 import com.iszhouhua.blog.model.pojo.User;
 import com.iszhouhua.blog.service.CommentService;
 import com.iszhouhua.blog.service.ConfigService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 评论管理
@@ -47,8 +46,8 @@ public class ApiCommentController {
         if (StringUtils.isNotBlank(content)) {
             queryWrapper.like("content", content);
         }
-        if (Objects.isNull(comment.getIsDelete())) {
-            queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
+        if (Objects.isNull(comment.getStatus())) {
+            queryWrapper.ne("status", 2);
         }
         IPage<Comment> commentPage = commentService.findCommentsByPage(page, queryWrapper);
         return Result.success(commentPage);
@@ -80,8 +79,7 @@ public class ApiCommentController {
         }
 //        User user = (User) request.getSession().getAttribute(Const.USER_SESSION_KEY);
         comment.setUserId(currentUser.getId());
-        comment.setIsDelete(DeleteEnum.NOTDELETE.getValue());
-        if (currentUser.getIsAdmin() == 1) {
+        if (currentUser.getIsAdmin()) {
             comment.setStatus(CommentStatusEnum.PUBLISHED.getValue());
         } else {
             Boolean isCheck = configService.getConfigObject(ConfigConst.COMMENT_CHECK, Boolean.class);
@@ -96,63 +94,29 @@ public class ApiCommentController {
 
     @PutMapping
     public Result update(@RequestBody Comment comment) {
-        Boolean res = false;
-        Comment commen = new Comment();
+        boolean res;
         if (Objects.isNull(comment.getId())) {
             return Result.fail(CodeEnum.VALIDATION_ERROR.getValue(), "评论ID不能为空");
         }
-        Comment com = commentService.getById(comment);
-        List<Comment> comments = commentService.getCommentByParentId(comment.getId());
-        if (comments.size() > 0) {
-            for (Comment comme : comments) {
-                comme.setIsDelete(DeleteEnum.DELETE.getValue());
+        Comment com = commentService.getById(comment.getId());
+        List<Comment> commentList = commentService.getCommentByParentId(comment.getId());
+        if (commentList.size() > 0) {
+            for (Comment comme : commentList) {
+                comme.setStatus(comment.getStatus());
                 commentService.updateById(comme);
             }
-            com.setIsDelete(DeleteEnum.DELETE.getValue());
+            com.setStatus(comment.getStatus());
             res = commentService.updateById(com);
         } else {
-            com.setIsDelete(DeleteEnum.DELETE.getValue());
-            res = commentService.updateById(com);
+            res = commentService.updateById(comment);
         }
         commentService.clearCache();
-        return res ? Result.success() : Result.fail("删除失败");
+        return res ? Result.success() : Result.fail("修改失败");
     }
-
-
-    /**
-     * 审核
-     *
-     * @param commentr
-     * @return
-     */
-    @PostMapping("review")
-    public Result review(@RequestBody Comment commentr) {
-        Comment comment = commentService.getById(commentr.getId());
-        BeanUtils.copyProperties(commentr, comment);
-        boolean res = commentService.updateById(comment);
-        commentService.clearCache();
-        return res ? Result.success() : Result.fail("审核失败");
-    }
-
 
     @GetMapping
     public Result info(Long id) {
         return Result.success(commentService.findCommentById(id));
-    }
-
-    /**
-     * 获得最近一周评论数和总评论数
-     *
-     * @return
-     */
-    @GetMapping("commentCount")
-    public Result commentCount() {
-        Map<String, Integer> data = new HashMap<>();
-        int totalComment = commentService.count(new QueryWrapper<Comment>().eq("is_delete", DeleteEnum.NOTDELETE.getValue()));
-        data.put("totalComment", totalComment);
-        int latestComment = commentService.count(new QueryWrapper<Comment>().eq("is_delete", DeleteEnum.NOTDELETE.getValue()).apply("create_time > DATE_SUB(CURDATE(), INTERVAL 1 WEEK)"));
-        data.put("latestComment", latestComment);
-        return Result.success(data);
     }
 
     /**

@@ -1,23 +1,17 @@
 spring:
   thymeleaf:
-    cache: false
+    cache: true
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=true&autoReconnect=true
+    url: jdbc:mysql://host.docker.internal:3306/blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false&autoReconnect=true
     username: root
-    password: yzq123
+    password: 123456
   mail:
-    host: smtp.iszhiqiang.cn
-    username: test@iszhiqiang.cn
+    host: smtp.iszhouhua.com
+    username: test@iszhouhua.com
     password: Zh123456
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-# log 配置
-logging:
-  file: logs/blog.log
-  level:
-    com:
-      iszhouhua:
-        blog: debug
+  # flyway配置
+  flyway:
+    # 禁止清理数据表
+    clean-disabled: true

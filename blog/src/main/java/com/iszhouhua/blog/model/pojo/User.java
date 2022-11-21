@@ -72,14 +72,12 @@ public class User implements Serializable {
     private Boolean isDisable;
 
     /**
-     * 用户是否为管理员 3：普通用户 1：是 2:审核员
+     * 用户是否为管理员 0：不是 1：是
      */
-    private Integer isAdmin;
+    private Boolean isAdmin;
 
     /**
      * 用户头像
      */
     private String avatar;
-
-
 }

@@ -117,11 +117,6 @@ public class Article implements Serializable {
     private Category category;
 
     /**
-     * 是否删除(1: 删除 0: 未删除)
-     */
-    private Integer isDelete;
-
-    /**
      * 获得文章关键字
      */
     public String getKeywords() {

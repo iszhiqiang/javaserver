@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iszhouhua.blog.common.constant.CodeEnum;
 import com.iszhouhua.blog.common.constant.Const;
 import com.iszhouhua.blog.common.exception.BlogException;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
 import com.iszhouhua.blog.model.pojo.Article;
 import com.iszhouhua.blog.model.pojo.Tag;
 import com.iszhouhua.blog.service.TagService;
@@ -21,7 +20,6 @@ import java.util.List;
 
 /**
  * 前台标签控制器
- *
  * @author ZhouHua
  * @date 2018/12/14
  */
@@ -34,45 +32,42 @@ public class TagController extends BaseController {
 
     /**
      * 标签集合页
-     *
      * @return
      */
     @GetMapping("/")
     public String tags(Model model) {
-        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
-        List<Tag> tags = tagService.list(queryWrapper);
-        model.addAttribute("list", tags);
+        List<Tag> tags=tagService.list();
+        model.addAttribute("list",tags);
         return "tags";
     }
 
     /**
      * 获得指定标签下的文章
-     *
      * @return
      */
     @GetMapping("{url}")
-    public String tag(Model model, @PathVariable(value = "url") String url) {
-        return tag(model, url, 1);
+    public String tag(Model model,@PathVariable(value = "url") String url) {
+        return tag(model,url,1);
     }
 
     /**
+     *
      * @param model
-     * @param url       标签链接
+     * @param url 标签链接
      * @param pageIndex 需要加载的页码
      * @return
      */
     @GetMapping("{url}/{pageIndex}")
-    public String tag(Model model, @PathVariable(value = "url") String url, @PathVariable(value = "pageIndex") Integer pageIndex) {
-        Tag tag = tagService.getOne(new QueryWrapper<Tag>().eq("url", url));
-        if (null == tag) {
-            throw new BlogException(CodeEnum.NOT_FOUND.getValue(), "标签不存在：" + url);
+    public String tag(Model model,@PathVariable(value = "url") String url,@PathVariable(value = "pageIndex") Integer pageIndex) {
+        Tag tag=tagService.getOne(new QueryWrapper<Tag>().eq("url",url));
+        if(null==tag){
+            throw new BlogException(CodeEnum.NOT_FOUND.getValue(),"标签不存在："+url);
         }
-        IPage<Article> page = articleService.findPageByTag(new Page<>(pageIndex, Const.PAGE_SIZE), tag.getId());
-        model.addAttribute("info", tag);
-        model.addAttribute("page", page);
+        IPage<Article> page=articleService.findPageByTag(new Page<>(pageIndex,Const.PAGE_SIZE),tag.getId());
+        model.addAttribute("info",tag);
+        model.addAttribute("page",page);
         //分页代码
-        model.addAttribute("pageHtml", pagination((int) page.getCurrent(), (int) page.getPages(), "/tag/" + url + "/"));
+        model.addAttribute("pageHtml",pagination((int)page.getCurrent(),(int)page.getPages(), "/tag/"+url+"/"));
         return "list";
     }
 }

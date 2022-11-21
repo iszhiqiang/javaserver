@@ -1,13 +1,11 @@
 package com.iszhouhua.blog.controller.api;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iszhouhua.blog.common.constant.CodeEnum;
 import com.iszhouhua.blog.common.exception.BlogException;
 import com.iszhouhua.blog.common.util.Result;
 import com.iszhouhua.blog.common.util.ValidatorUtils;
-import com.iszhouhua.blog.model.enums.DeleteEnum;
 import com.iszhouhua.blog.model.pojo.Article;
 import com.iszhouhua.blog.model.pojo.Spider;
 import com.iszhouhua.blog.service.SpiderService;
@@ -32,22 +30,17 @@ public class ApiSpiderController {
 
     @GetMapping("list")
     public Result list(Page<Spider> page) {
-        QueryWrapper<Spider> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
-        return Result.success(spiderService.page(page, queryWrapper));
+        return Result.success(spiderService.page(page));
     }
 
     @GetMapping("all")
     public Result all() {
-        QueryWrapper<Spider> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", DeleteEnum.NOTDELETE.getValue());
-        return Result.success(spiderService.list(queryWrapper));
+        return Result.success(spiderService.list());
     }
 
     @PostMapping
     public Result save(@RequestBody Spider spider) {
         ValidatorUtils.validate(spider);
-        spider.setIsDelete(DeleteEnum.NOTDELETE.getValue());
         spiderService.save(spider);
         return Result.success(spider);
     }
@@ -69,9 +62,7 @@ public class ApiSpiderController {
 
     @DeleteMapping
     public Result remove(Long id) {
-        Spider spider = spiderService.getById(id);
-        spider.setIsDelete(DeleteEnum.DELETE.getValue());
-        return spiderService.updateById(spider) ? Result.success() : Result.fail("删除失败");
+        return spiderService.removeById(id) ? Result.success() : Result.fail("删除失败");
     }
 
     @PostMapping("spiderArticle")
