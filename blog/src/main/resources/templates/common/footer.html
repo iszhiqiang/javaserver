@@ -15,14 +15,9 @@
     </div>
 </footer>
 <script>
-    // var href = $('blogurl').attr('href');
-    // $('#blogurl').attr('href',);
-    // var hf= $('networkUrl').attr('href',"");
-    // $('#networkUrl').attr('hf',"");
     var hr = document.getElementById('blogurl').href = '[[${GLOBAL.BLOG_URL}]]';
-    alert(hr)
     var str = '[[${GLOBAL.FILING_SECURITY}]]';
-    var strs = str.substring(7, 15);
+    var strs = str.substring(5, 20);
     document.getElementById('networkUrl').href =
         "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=" + strs;
 
